@@ -25,7 +25,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/pterodactyl-china/panel
+            ghcr.io/pterodactyl-china/panel-idc
           flavor: |
             latest=false
           tags: |
