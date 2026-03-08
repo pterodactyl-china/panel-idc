@@ -13,6 +13,12 @@ import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
+import StoreContainer from '@/components/dashboard/store/StoreContainer';
+import PointsContainer from '@/components/dashboard/PointsContainer';
+import RedeemContainer from '@/components/dashboard/RedeemContainer';
+import OrdersContainer from '@/components/dashboard/store/OrdersContainer';
+import TicketsContainer from '@/components/dashboard/store/TicketsContainer';
+import TicketDetailContainer from '@/components/dashboard/store/TicketDetailContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -38,6 +44,8 @@ interface ServerRouteDefinition extends RouteDefinition {
 interface Routes {
     // All of the routes available under "/account"
     account: RouteDefinition[];
+    // Top-level store/points routes (accessible from the nav bar)
+    store: RouteDefinition[];
     // All of the routes available under "/server/:id"
     server: ServerRouteDefinition[];
 }
@@ -64,6 +72,45 @@ export default {
             path: '/activity',
             name: '活动日志',
             component: ActivityLogContainer,
+        },
+    ],
+    store: [
+        {
+            path: '/store',
+            name: '商店',
+            component: StoreContainer,
+            exact: true,
+        },
+        {
+            path: '/points',
+            name: '我的积分',
+            component: PointsContainer,
+            exact: true,
+        },
+        {
+            path: '/redeem',
+            name: '兑换码',
+            component: RedeemContainer,
+            exact: true,
+        },
+        {
+            path: '/orders',
+            name: '我的订单',
+            component: OrdersContainer,
+            exact: true,
+        },
+        {
+            path: '/tickets',
+            name: '工单',
+            component: TicketsContainer,
+            exact: true,
+        },
+        {
+            // Ticket detail — not shown in sub-nav
+            path: '/tickets/:id',
+            name: undefined,
+            component: TicketDetailContainer,
+            exact: true,
         },
     ],
     server: [

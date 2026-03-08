@@ -1,0 +1,77 @@
+<?php
+
+namespace Pterodactyl\Models;
+
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * \Pterodactyl\Models\Product.
+ *
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string $type  points|server_days|server|custom
+ * @property int $value
+ * @property float $price
+ * @property string $currency
+ * @property bool $is_active
+ * @property int $sort_order
+ * @property int|null $location_id
+ * @property int|null $node_id
+ * @property int|null $egg_id
+ * @property int|null $cpu
+ * @property int|null $memory
+ * @property int|null $disk
+ * @property int|null $databases
+ * @property int|null $backups
+ * @property int|null $allocations
+ * @property int|null $points_cpu_rate
+ * @property int|null $points_memory_rate
+ * @property int|null $points_disk_rate
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ *
+ * @mixin \Eloquent
+ */
+class Product extends Model
+{
+    protected $table = 'products';
+
+    protected $guarded = ['id'];
+
+    protected $casts = [
+        'value'       => 'integer',
+        'price'       => 'float',
+        'is_active'   => 'boolean',
+        'sort_order'  => 'integer',
+        'location_id' => 'integer',
+        'node_id'     => 'integer',
+        'egg_id'      => 'integer',
+        'cpu'         => 'integer',
+        'memory'      => 'integer',
+        'disk'        => 'integer',
+        'databases'          => 'integer',
+        'backups'            => 'integer',
+        'allocations'        => 'integer',
+        'points_cpu_rate'    => 'integer',
+        'points_memory_rate' => 'integer',
+        'points_disk_rate'   => 'integer',
+    ];
+
+    public static array $validationRules = [
+        'name'     => 'required|string|max:191',
+        'type'     => 'required|string|in:points,server_days,server,custom',
+        'value'    => 'required|integer|min:0',
+        'price'    => 'required|numeric|min:0',
+        'currency' => 'required|string|max:8',
+        'is_active' => 'sometimes|boolean',
+    ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\Pterodactyl\Models\Order, $this>
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+}

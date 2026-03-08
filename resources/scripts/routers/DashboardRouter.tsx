@@ -12,6 +12,12 @@ import routes from '@/routers/routes';
 export default () => {
     const location = useLocation();
 
+    const isStorePath = location.pathname.startsWith('/store')
+        || location.pathname.startsWith('/points')
+        || location.pathname.startsWith('/redeem')
+        || location.pathname.startsWith('/orders')
+        || location.pathname.startsWith('/tickets');
+
     return (
         <>
             <NavigationBar />
@@ -28,6 +34,19 @@ export default () => {
                     </div>
                 </SubNavigation>
             )}
+            {isStorePath && (
+                <SubNavigation>
+                    <div>
+                        {routes.store
+                            .filter((route) => !!route.name)
+                            .map(({ path, name, exact = false }) => (
+                                <NavLink key={path} to={path} exact={exact}>
+                                    {name}
+                                </NavLink>
+                            ))}
+                    </div>
+                </SubNavigation>
+            )}
             <TransitionRouter>
                 <React.Suspense fallback={<Spinner centered />}>
                     <Switch location={location}>
@@ -36,6 +55,11 @@ export default () => {
                         </Route>
                         {routes.account.map(({ path, component: Component }) => (
                             <Route key={path} path={`/account/${path}`.replace('//', '/')} exact>
+                                <Component />
+                            </Route>
+                        ))}
+                        {routes.store.map(({ path, component: Component, exact = false }) => (
+                            <Route key={path} path={path} exact={exact}>
                                 <Component />
                             </Route>
                         ))}

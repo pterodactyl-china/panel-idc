@@ -122,6 +122,37 @@
                                 <i class="fa fa-th-large"></i> <span>预设组</span>
                             </a>
                         </li>
+                        <li class="header">商店管理</li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.products') ?: 'active' }}">
+                            <a href="{{ route('admin.store.products') }}">
+                                <i class="fa fa-shopping-bag"></i> <span>商品管理</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.redemption-codes') ?: 'active' }}">
+                            <a href="{{ route('admin.store.redemption-codes') }}">
+                                <i class="fa fa-ticket"></i> <span>兑换码管理</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.orders') ?: 'active' }}">
+                            <a href="{{ route('admin.store.orders') }}">
+                                <i class="fa fa-credit-card"></i> <span>订单管理</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.points') ?: 'active' }}">
+                            <a href="{{ route('admin.store.points') }}">
+                                <i class="fa fa-star"></i> <span>积分管理</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.payment-settings') ?: 'active' }}">
+                            <a href="{{ route('admin.store.payment-settings') }}">
+                                <i class="fa fa-money"></i> <span>支付设置</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.tickets') ?: 'active' }}">
+                            <a href="{{ route('admin.store.tickets') }}">
+                                <i class="fa fa-envelope"></i> <span>工单管理</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>

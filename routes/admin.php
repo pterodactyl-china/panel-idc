@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Admin;
+use Pterodactyl\Http\Controllers\Admin\Store;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
@@ -225,4 +226,51 @@ Route::group(['prefix' => 'nests'], function () {
     Route::delete('/view/{nest:id}', [Admin\Nests\NestController::class, 'destroy']);
     Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
     Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Store Management Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/store
+|
+*/
+
+Route::group(['prefix' => 'store'], function () {
+    // Products
+    Route::get('/products', [Store\ProductController::class, 'index'])->name('admin.store.products');
+    Route::get('/products/new', [Store\ProductController::class, 'create'])->name('admin.store.products.new');
+    Route::get('/products/{id}/edit', [Store\ProductController::class, 'edit'])->name('admin.store.products.edit');
+
+    Route::post('/products', [Store\ProductController::class, 'store']);
+    Route::post('/products/{id}', [Store\ProductController::class, 'update']);
+    Route::delete('/products/{id}', [Store\ProductController::class, 'destroy'])->name('admin.store.products.delete');
+
+    // Redemption Codes
+    Route::get('/redemption-codes', [Store\RedemptionCodeAdminController::class, 'index'])->name('admin.store.redemption-codes');
+    Route::post('/redemption-codes', [Store\RedemptionCodeAdminController::class, 'store']);
+    Route::delete('/redemption-codes/{id}', [Store\RedemptionCodeAdminController::class, 'destroy'])->name('admin.store.redemption-codes.delete');
+
+    // Orders
+    Route::get('/orders', [Store\OrderAdminController::class, 'index'])->name('admin.store.orders');
+    Route::post('/orders/{id}/complete', [Store\OrderAdminController::class, 'complete'])->name('admin.store.orders.complete');
+    Route::post('/orders/{id}/cancel', [Store\OrderAdminController::class, 'cancel'])->name('admin.store.orders.cancel');
+    Route::post('/orders/{id}/refund', [Store\OrderAdminController::class, 'refund'])->name('admin.store.orders.refund');
+    Route::delete('/orders/{id}', [Store\OrderAdminController::class, 'destroy'])->name('admin.store.orders.delete');
+
+    // Points
+    Route::get('/points', [Store\PointsAdminController::class, 'index'])->name('admin.store.points');
+    Route::post('/points/{userId}/adjust', [Store\PointsAdminController::class, 'adjust'])->name('admin.store.points.adjust');
+
+    // Payment Settings
+    Route::get('/payment-settings', [Store\PaymentSettingsController::class, 'index'])->name('admin.store.payment-settings');
+    Route::post('/payment-settings', [Store\PaymentSettingsController::class, 'update']);
+
+    // Tickets
+    Route::get('/tickets', [Store\TicketAdminController::class, 'index'])->name('admin.store.tickets');
+    Route::get('/tickets/{id}', [Store\TicketAdminController::class, 'view'])->name('admin.store.tickets.view');
+    Route::post('/tickets/{id}/reply', [Store\TicketAdminController::class, 'reply'])->name('admin.store.tickets.reply');
+    Route::post('/tickets/{id}/status', [Store\TicketAdminController::class, 'updateStatus'])->name('admin.store.tickets.status');
+    Route::delete('/tickets/{id}', [Store\TicketAdminController::class, 'destroy'])->name('admin.store.tickets.delete');
 });

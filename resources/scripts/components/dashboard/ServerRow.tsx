@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEthernet, faHdd, faMemory, faMicrochip, faServer } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faCoins, faEthernet, faHdd, faMemory, faMicrochip, faServer } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { Server } from '@/api/server/getServer';
 import getServerResourceUsage, { ServerPowerState, ServerStats } from '@/api/server/getServerResourceUsage';
@@ -14,6 +14,19 @@ import isEqual from 'react-fast-compare';
 // Determines if the current value is in an alarm threshold so we can show it in red rather
 // than the more faded default style.
 const isAlarmState = (current: number, limit: number): boolean => limit > 0 && current / (limit * 1024 * 1024) >= 0.9;
+
+const formatExpiry = (expiresAt: string | null): { label: string; isExpired: boolean; isExpiringSoon: boolean } => {
+    if (!expiresAt) return { label: '', isExpired: false, isExpiringSoon: false };
+    const now = Date.now();
+    const expiry = new Date(expiresAt).getTime();
+    const diff = expiry - now;
+    const isExpired = diff <= 0;
+    const isExpiringSoon = !isExpired && diff < 7 * 24 * 60 * 60 * 1000; // within 7 days
+
+    const date = new Date(expiresAt);
+    const label = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    return { label, isExpired, isExpiringSoon };
+};
 
 const Icon = memo(
     styled(FontAwesomeIcon)<{ $alarm: boolean }>`
@@ -88,6 +101,8 @@ export default ({ server, className }: { server: Server; className?: string }) =
     const memoryLimit = server.limits.memory !== 0 ? bytesToString(mbToBytes(server.limits.memory)) : '无限制';
     const cpuLimit = server.limits.cpu !== 0 ? server.limits.cpu + ' %' : '无限制';
 
+    const expiry = formatExpiry(server.expiresAt);
+
     return (
         <StatusIndicatorBox as={Link} to={`/server/${server.id}`} className={className} $status={stats?.status}>
             <div css={tw`flex items-center col-span-12 sm:col-span-5 lg:col-span-6`}>
@@ -98,6 +113,33 @@ export default ({ server, className }: { server: Server; className?: string }) =
                     <p css={tw`text-lg break-words`}>{server.name}</p>
                     {!!server.description && (
                         <p css={tw`text-sm text-neutral-300 break-words line-clamp-2`}>{server.description}</p>
+                    )}
+                    {expiry.label && (
+                        <p css={tw`text-xs mt-1 flex items-center`}>
+                            <FontAwesomeIcon
+                                icon={faCalendarAlt}
+                                css={expiry.isExpired ? tw`text-red-400` : expiry.isExpiringSoon ? tw`text-yellow-400` : tw`text-neutral-500`}
+                            />
+                            <span
+                                css={[
+                                    tw`ml-1`,
+                                    expiry.isExpired
+                                        ? tw`text-red-400`
+                                        : expiry.isExpiringSoon
+                                        ? tw`text-yellow-400`
+                                        : tw`text-neutral-400`,
+                                ]}
+                            >
+                                {expiry.isExpired ? '已到期: ' : '到期: '}
+                                {expiry.label}
+                            </span>
+                        </p>
+                    )}
+                    {server.pointsPerDay !== null && server.pointsPerDay !== undefined && (
+                        <p css={tw`text-xs mt-1 flex items-center`}>
+                            <FontAwesomeIcon icon={faCoins} css={tw`text-yellow-500`} />
+                            <span css={tw`ml-1 text-neutral-400`}>{server.pointsPerDay} 积分/天</span>
+                        </p>
                     )}
                 </div>
             </div>

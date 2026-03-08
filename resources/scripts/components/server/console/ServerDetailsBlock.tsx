@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
+    faCalendarAlt,
+    faCoins,
     faClock,
     faCloudDownloadAlt,
     faCloudUploadAlt,
@@ -25,6 +27,20 @@ const statusMap: Record<NonNullable<ServerStatus>, string> = {
 };
 
 type Stats = Record<'memory' | 'cpu' | 'disk' | 'uptime' | 'rx' | 'tx', number>;
+
+/** Compute display info for an expiry timestamp. */
+const useExpiryInfo = (expiresAt: string | null) =>
+    useMemo(() => {
+        if (!expiresAt) return null;
+        const now = Date.now();
+        const expiry = new Date(expiresAt).getTime();
+        const diff = expiry - now;
+        const isExpired = diff <= 0;
+        const isExpiringSoon = !isExpired && diff < 7 * 24 * 60 * 60 * 1000;
+        const d = new Date(expiresAt);
+        const label = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        return { label, isExpired, isExpiringSoon };
+    }, [expiresAt]);
 
 const getBackgroundColor = (value: number, max: number | null): string | undefined => {
     const delta = !max ? 0 : value / max;
@@ -53,6 +69,10 @@ const ServerDetailsBlock = ({ className }: { className?: string }) => {
     const connected = ServerContext.useStoreState((state) => state.socket.connected);
     const instance = ServerContext.useStoreState((state) => state.socket.instance);
     const limits = ServerContext.useStoreState((state) => state.server.data!.limits);
+    const expiresAt = ServerContext.useStoreState((state) => state.server.data!.expiresAt);
+    const pointsPerDay = ServerContext.useStoreState((state) => state.server.data!.pointsPerDay);
+
+    const expiryInfo = useExpiryInfo(expiresAt);
 
     const textLimits = useMemo(
         () => ({
@@ -144,6 +164,37 @@ const ServerDetailsBlock = ({ className }: { className?: string }) => {
             <StatBlock icon={faCloudUploadAlt} title={'网络(出站)'}>
                 {status === 'offline' ? <span className={'text-gray-400'}>离线</span> : bytesToString(stats.tx)}
             </StatBlock>
+            {expiryInfo && (
+                <StatBlock
+                    icon={faCalendarAlt}
+                    title={'到期时间'}
+                    color={
+                        expiryInfo.isExpired
+                            ? 'bg-red-500'
+                            : expiryInfo.isExpiringSoon
+                            ? 'bg-yellow-500'
+                            : undefined
+                    }
+                >
+                    <span
+                        className={
+                            expiryInfo.isExpired
+                                ? 'text-red-400'
+                                : expiryInfo.isExpiringSoon
+                                ? 'text-yellow-400'
+                                : ''
+                        }
+                    >
+                        {expiryInfo.isExpired && <span className={'mr-1'}>已到期</span>}
+                        {expiryInfo.label}
+                    </span>
+                </StatBlock>
+            )}
+            {pointsPerDay !== null && pointsPerDay !== undefined && (
+                <StatBlock icon={faCoins} title={'每日积分'}>
+                    {pointsPerDay} <span className={'text-gray-400 text-xs'}>积分/天</span>
+                </StatBlock>
+            )}
         </div>
     );
 };
