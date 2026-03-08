@@ -19,6 +19,7 @@ export interface OrderStatus {
     status: string;
     amount: number;
     paid_at: string | null;
+    payment_info?: OrderPaymentInfo;
 }
 
 export type PaymentMethod = 'alipay' | 'alipay_face' | 'wechat';

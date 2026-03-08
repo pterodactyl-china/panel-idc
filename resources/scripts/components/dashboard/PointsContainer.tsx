@@ -20,7 +20,6 @@ const typeLabel: Record<string, string> = {
 
 export default () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
-    const uuid = useStoreState((state) => state.user.data!.uuid);
 
     const { data, error } = useSWR<PointsData>('/api/client/points', () => getPoints());
     const { data: serversData } = useSWR<PaginatedResult<Server>>(

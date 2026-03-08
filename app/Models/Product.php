@@ -25,6 +25,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int|null $databases
  * @property int|null $backups
  * @property int|null $allocations
+ * @property int|null $points_cpu_rate
+ * @property int|null $points_memory_rate
+ * @property int|null $points_disk_rate
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -47,9 +50,12 @@ class Product extends Model
         'cpu'         => 'integer',
         'memory'      => 'integer',
         'disk'        => 'integer',
-        'databases'   => 'integer',
-        'backups'     => 'integer',
-        'allocations' => 'integer',
+        'databases'          => 'integer',
+        'backups'            => 'integer',
+        'allocations'        => 'integer',
+        'points_cpu_rate'    => 'integer',
+        'points_memory_rate' => 'integer',
+        'points_disk_rate'   => 'integer',
     ];
 
     public static array $validationRules = [

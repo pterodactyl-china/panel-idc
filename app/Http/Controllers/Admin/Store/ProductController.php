@@ -34,10 +34,13 @@ class ProductController extends Controller
     public function create(): View
     {
         return view('admin.store.products.new', [
-            'product'   => null,
-            'locations' => Location::all(),
-            'nodes'     => Node::all(),
-            'eggs'      => Egg::with('nest')->orderBy('name')->get(),
+            'product'      => null,
+            'locations'    => Location::all(),
+            'nodes'        => Node::all(),
+            'eggs'         => Egg::with('nest')->orderBy('name')->get(),
+            'cpu_rate'     => $this->calculator->getCpuRatePerCore(),
+            'memory_rate'  => $this->calculator->getMemoryRatePerGb(),
+            'disk_rate'    => $this->calculator->getDiskRatePerGb(),
         ]);
     }
 
@@ -52,10 +55,13 @@ class ProductController extends Controller
     public function edit(int $id): View
     {
         return view('admin.store.products.new', [
-            'product'   => Product::findOrFail($id),
-            'locations' => Location::all(),
-            'nodes'     => Node::all(),
-            'eggs'      => Egg::with('nest')->orderBy('name')->get(),
+            'product'      => Product::findOrFail($id),
+            'locations'    => Location::all(),
+            'nodes'        => Node::all(),
+            'eggs'         => Egg::with('nest')->orderBy('name')->get(),
+            'cpu_rate'     => $this->calculator->getCpuRatePerCore(),
+            'memory_rate'  => $this->calculator->getMemoryRatePerGb(),
+            'disk_rate'    => $this->calculator->getDiskRatePerGb(),
         ]);
     }
 
@@ -88,15 +94,19 @@ class ProductController extends Controller
             'is_active'   => 'sometimes|boolean',
             'sort_order'  => 'nullable|integer|min:0',
             // Server package fields
-            'location_id' => 'nullable|integer|exists:locations,id',
-            'node_id'     => 'nullable|integer|exists:nodes,id',
-            'egg_id'      => 'nullable|integer|exists:eggs,id',
-            'cpu'         => 'nullable|integer|min:0',
-            'memory'      => 'nullable|integer|min:0',
-            'disk'        => 'nullable|integer|min:0',
-            'databases'   => 'nullable|integer|min:0',
-            'backups'     => 'nullable|integer|min:0',
-            'allocations' => 'nullable|integer|min:0',
+            'location_id'        => 'nullable|integer|exists:locations,id',
+            'node_id'            => 'nullable|integer|exists:nodes,id',
+            'egg_id'             => 'nullable|integer|exists:eggs,id',
+            'cpu'                => 'nullable|integer|min:0',
+            'memory'             => 'nullable|integer|min:0',
+            'disk'               => 'nullable|integer|min:0',
+            'databases'          => 'nullable|integer|min:0',
+            'backups'            => 'nullable|integer|min:0',
+            'allocations'        => 'nullable|integer|min:0',
+            // Per-product daily-points rates
+            'points_cpu_rate'    => 'nullable|integer|min:0',
+            'points_memory_rate' => 'nullable|integer|min:0',
+            'points_disk_rate'   => 'nullable|integer|min:0',
         ]);
 
         $data['is_active']  = $request->boolean('is_active');
@@ -104,7 +114,8 @@ class ProductController extends Controller
 
         // Clear server-only fields when type is not 'server'
         if (!$isServer) {
-            foreach (['location_id','node_id','egg_id','cpu','memory','disk','databases','backups','allocations'] as $f) {
+            foreach (['location_id','node_id','egg_id','cpu','memory','disk','databases','backups','allocations',
+                      'points_cpu_rate','points_memory_rate','points_disk_rate'] as $f) {
                 $data[$f] = null;
             }
         }

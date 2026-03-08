@@ -62,6 +62,7 @@ class PaymentController extends ClientApiController
 
     /**
      * Query the status of an order.
+     * For pending orders the payment info is also returned so the user can re-display the QR code.
      */
     public function queryOrder(Request $request, string $orderNo): JsonResponse
     {
@@ -69,12 +70,19 @@ class PaymentController extends ClientApiController
             ->where('user_id', $request->user()->id)
             ->firstOrFail();
 
-        return new JsonResponse([
+        $response = [
             'order_no' => $order->order_no,
             'status'   => $order->status,
             'amount'   => $order->amount,
             'paid_at'  => $order->paid_at?->toIso8601String(),
-        ]);
+        ];
+
+        // Include payment_info so pending orders can show the payment screen again.
+        if ($order->isPending() && $order->payment_method) {
+            $response['payment_info'] = $this->buildPaymentInfo($order, $order->payment_method);
+        }
+
+        return new JsonResponse($response);
     }
 
     /**

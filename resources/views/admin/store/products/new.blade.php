@@ -145,6 +145,28 @@
                                 <input type="number" name="allocations" class="form-control" value="{{ old('allocations', $product?->allocations ?? 1) }}" min="1">
                             </div>
                         </div>
+                        <hr>
+                        <h5>每日积分消耗费率 <small class="text-muted">（留空则使用全局费率；不同节点/地域可设置不同价格）</small></h5>
+                        <div class="row">
+                            <div class="col-md-4 form-group">
+                                <label>CPU 费率 <small class="text-muted">积分/核/天</small></label>
+                                <input type="number" name="points_cpu_rate" class="form-control"
+                                    value="{{ old('points_cpu_rate', $product?->points_cpu_rate) }}"
+                                    min="0" placeholder="留空使用全局 ({{ $cpu_rate }})">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>内存费率 <small class="text-muted">积分/GB/天</small></label>
+                                <input type="number" name="points_memory_rate" class="form-control"
+                                    value="{{ old('points_memory_rate', $product?->points_memory_rate) }}"
+                                    min="0" placeholder="留空使用全局 ({{ $memory_rate }})">
+                            </div>
+                            <div class="col-md-4 form-group">
+                                <label>磁盘费率 <small class="text-muted">积分/GB/天</small></label>
+                                <input type="number" name="points_disk_rate" class="form-control"
+                                    value="{{ old('points_disk_rate', $product?->points_disk_rate) }}"
+                                    min="0" placeholder="留空使用全局 ({{ $disk_rate }})">
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="box-footer">
