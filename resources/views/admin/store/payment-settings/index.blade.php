@@ -24,7 +24,7 @@
                 <div class="box-body">
 
                     {{-- Alipay Online --}}
-                    <div class="callout callout-info" style="margin-bottom:20px;">
+                    <div class="callout callout-info" style="margin-bottom:20px">
                         <h4><i class="fa fa-mobile"></i> 支付宝（在线扫码）</h4>
                     </div>
                     <div class="form-group">
@@ -58,7 +58,7 @@
                     <hr>
 
                     {{-- Alipay Face to Face --}}
-                    <div class="callout callout-warning" style="margin-bottom:20px;">
+                    <div class="callout callout-warning" style="margin-bottom:20px">
                         <h4><i class="fa fa-qrcode"></i> 支付宝（面对面收款）</h4>
                     </div>
                     <div class="form-group">
@@ -81,7 +81,7 @@
                     <hr>
 
                     {{-- WeChat Pay --}}
-                    <div class="callout callout-success" style="margin-bottom:20px;">
+                    <div class="callout callout-success" style="margin-bottom:20px">
                         <h4><i class="fa fa-weixin"></i> 微信支付</h4>
                     </div>
                     <div class="form-group">
