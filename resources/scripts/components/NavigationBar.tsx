@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCogs, faLayerGroup, faShoppingCart, faSignOutAlt, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faCogs, faLayerGroup, faShoppingCart, faSignOutAlt, faStar, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 import { useStoreState } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
@@ -77,6 +77,11 @@ export default () => {
                     <Tooltip placement={'bottom'} content={'我的积分'}>
                         <NavLink to={'/points'}>
                             <FontAwesomeIcon icon={faStar} />
+                        </NavLink>
+                    </Tooltip>
+                    <Tooltip placement={'bottom'} content={'工单'}>
+                        <NavLink to={'/tickets'}>
+                            <FontAwesomeIcon icon={faTicketAlt} />
                         </NavLink>
                     </Tooltip>
                     {rootAdmin && (

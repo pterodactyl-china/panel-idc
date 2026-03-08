@@ -32,6 +32,29 @@ Route::prefix('/points')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Orders API
+|--------------------------------------------------------------------------
+*/
+Route::prefix('/orders')->group(function () {
+    Route::get('/', [Client\OrderController::class, 'index'])->name('api:client.orders');
+    Route::delete('/{orderNo}', [Client\OrderController::class, 'cancel'])->name('api:client.orders.cancel');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Tickets API
+|--------------------------------------------------------------------------
+*/
+Route::prefix('/tickets')->group(function () {
+    Route::get('/', [Client\TicketController::class, 'index'])->name('api:client.tickets');
+    Route::post('/', [Client\TicketController::class, 'store'])->name('api:client.tickets.store');
+    Route::get('/{id}', [Client\TicketController::class, 'show'])->name('api:client.tickets.show');
+    Route::post('/{id}/reply', [Client\TicketController::class, 'reply'])->name('api:client.tickets.reply');
+    Route::post('/{id}/close', [Client\TicketController::class, 'close'])->name('api:client.tickets.close');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Redemption Codes API
 |--------------------------------------------------------------------------
 */

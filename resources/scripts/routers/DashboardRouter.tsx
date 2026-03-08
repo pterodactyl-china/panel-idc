@@ -12,7 +12,11 @@ import routes from '@/routers/routes';
 export default () => {
     const location = useLocation();
 
-    const isStorePath = location.pathname.startsWith('/store') || location.pathname.startsWith('/points') || location.pathname.startsWith('/redeem');
+    const isStorePath = location.pathname.startsWith('/store')
+        || location.pathname.startsWith('/points')
+        || location.pathname.startsWith('/redeem')
+        || location.pathname.startsWith('/orders')
+        || location.pathname.startsWith('/tickets');
 
     return (
         <>

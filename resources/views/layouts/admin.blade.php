@@ -143,6 +143,16 @@
                                 <i class="fa fa-star"></i> <span>积分管理</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.payment-settings') ?: 'active' }}">
+                            <a href="{{ route('admin.store.payment-settings') }}">
+                                <i class="fa fa-money"></i> <span>支付设置</span>
+                            </a>
+                        </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.store.tickets') ?: 'active' }}">
+                            <a href="{{ route('admin.store.tickets') }}">
+                                <i class="fa fa-envelope"></i> <span>工单管理</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>

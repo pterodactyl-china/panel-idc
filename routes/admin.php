@@ -254,8 +254,23 @@ Route::group(['prefix' => 'store'], function () {
 
     // Orders
     Route::get('/orders', [Store\OrderAdminController::class, 'index'])->name('admin.store.orders');
+    Route::post('/orders/{id}/complete', [Store\OrderAdminController::class, 'complete'])->name('admin.store.orders.complete');
+    Route::post('/orders/{id}/cancel', [Store\OrderAdminController::class, 'cancel'])->name('admin.store.orders.cancel');
+    Route::post('/orders/{id}/refund', [Store\OrderAdminController::class, 'refund'])->name('admin.store.orders.refund');
+    Route::delete('/orders/{id}', [Store\OrderAdminController::class, 'destroy'])->name('admin.store.orders.delete');
 
     // Points
     Route::get('/points', [Store\PointsAdminController::class, 'index'])->name('admin.store.points');
     Route::post('/points/{userId}/adjust', [Store\PointsAdminController::class, 'adjust'])->name('admin.store.points.adjust');
+
+    // Payment Settings
+    Route::get('/payment-settings', [Store\PaymentSettingsController::class, 'index'])->name('admin.store.payment-settings');
+    Route::post('/payment-settings', [Store\PaymentSettingsController::class, 'update']);
+
+    // Tickets
+    Route::get('/tickets', [Store\TicketAdminController::class, 'index'])->name('admin.store.tickets');
+    Route::get('/tickets/{id}', [Store\TicketAdminController::class, 'view'])->name('admin.store.tickets.view');
+    Route::post('/tickets/{id}/reply', [Store\TicketAdminController::class, 'reply'])->name('admin.store.tickets.reply');
+    Route::post('/tickets/{id}/status', [Store\TicketAdminController::class, 'updateStatus'])->name('admin.store.tickets.status');
+    Route::delete('/tickets/{id}', [Store\TicketAdminController::class, 'destroy'])->name('admin.store.tickets.delete');
 });

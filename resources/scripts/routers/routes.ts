@@ -16,6 +16,9 @@ import ServerActivityLogContainer from '@/components/server/ServerActivityLogCon
 import StoreContainer from '@/components/dashboard/store/StoreContainer';
 import PointsContainer from '@/components/dashboard/PointsContainer';
 import RedeemContainer from '@/components/dashboard/RedeemContainer';
+import OrdersContainer from '@/components/dashboard/store/OrdersContainer';
+import TicketsContainer from '@/components/dashboard/store/TicketsContainer';
+import TicketDetailContainer from '@/components/dashboard/store/TicketDetailContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -88,6 +91,25 @@ export default {
             path: '/redeem',
             name: '兑换码',
             component: RedeemContainer,
+            exact: true,
+        },
+        {
+            path: '/orders',
+            name: '我的订单',
+            component: OrdersContainer,
+            exact: true,
+        },
+        {
+            path: '/tickets',
+            name: '工单',
+            component: TicketsContainer,
+            exact: true,
+        },
+        {
+            // Ticket detail — not shown in sub-nav
+            path: '/tickets/:id',
+            name: undefined,
+            component: TicketDetailContainer,
             exact: true,
         },
     ],
