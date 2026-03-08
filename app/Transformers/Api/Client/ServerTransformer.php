@@ -80,6 +80,7 @@ class ServerTransformer extends BaseClientTransformer
             'is_installing' => !$server->isInstalled(),
             'is_transferring' => !is_null($server->transfer),
             'expires_at' => $server->expires_at?->toIso8601String(),
+            'points_per_day' => $server->points_per_day,
         ];
     }
 

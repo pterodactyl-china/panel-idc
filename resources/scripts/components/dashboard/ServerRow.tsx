@@ -1,6 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendarAlt, faEthernet, faHdd, faMemory, faMicrochip, faServer } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarAlt, faCoins, faEthernet, faHdd, faMemory, faMicrochip, faServer } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { Server } from '@/api/server/getServer';
 import getServerResourceUsage, { ServerPowerState, ServerStats } from '@/api/server/getServerResourceUsage';
@@ -133,6 +133,12 @@ export default ({ server, className }: { server: Server; className?: string }) =
                                 {expiry.isExpired ? '已到期: ' : '到期: '}
                                 {expiry.label}
                             </span>
+                        </p>
+                    )}
+                    {server.pointsPerDay !== null && server.pointsPerDay !== undefined && (
+                        <p css={tw`text-xs mt-1 flex items-center`}>
+                            <FontAwesomeIcon icon={faCoins} css={tw`text-yellow-500`} />
+                            <span css={tw`ml-1 text-neutral-400`}>{server.pointsPerDay} 积分/天</span>
                         </p>
                     )}
                 </div>

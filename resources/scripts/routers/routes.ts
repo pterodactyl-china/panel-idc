@@ -41,6 +41,8 @@ interface ServerRouteDefinition extends RouteDefinition {
 interface Routes {
     // All of the routes available under "/account"
     account: RouteDefinition[];
+    // Top-level store/points routes (accessible from the nav bar)
+    store: RouteDefinition[];
     // All of the routes available under "/server/:id"
     server: ServerRouteDefinition[];
 }
@@ -68,20 +70,25 @@ export default {
             name: '活动日志',
             component: ActivityLogContainer,
         },
+    ],
+    store: [
         {
             path: '/store',
             name: '商店',
             component: StoreContainer,
+            exact: true,
         },
         {
             path: '/points',
-            name: '积分',
+            name: '我的积分',
             component: PointsContainer,
+            exact: true,
         },
         {
             path: '/redeem',
             name: '兑换码',
             component: RedeemContainer,
+            exact: true,
         },
     ],
     server: [
