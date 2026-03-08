@@ -13,6 +13,9 @@ import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
+import StoreContainer from '@/components/dashboard/store/StoreContainer';
+import PointsContainer from '@/components/dashboard/PointsContainer';
+import RedeemContainer from '@/components/dashboard/RedeemContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -64,6 +67,21 @@ export default {
             path: '/activity',
             name: '活动日志',
             component: ActivityLogContainer,
+        },
+        {
+            path: '/store',
+            name: '商店',
+            component: StoreContainer,
+        },
+        {
+            path: '/points',
+            name: '积分',
+            component: PointsContainer,
+        },
+        {
+            path: '/redeem',
+            name: '兑换码',
+            component: RedeemContainer,
         },
     ],
     server: [

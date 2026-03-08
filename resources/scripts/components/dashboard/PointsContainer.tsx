@@ -1,0 +1,80 @@
+import React from 'react';
+import useSWR from 'swr';
+import tw from 'twin.macro';
+import PageContentBlock from '@/components/elements/PageContentBlock';
+import Spinner from '@/components/elements/Spinner';
+import ContentBox from '@/components/elements/ContentBox';
+import getPoints, { PointsData } from '@/api/getPoints';
+import useFlash from '@/plugins/useFlash';
+
+const typeLabel: Record<string, string> = {
+    earn: '购买获得',
+    spend: '消费',
+    refund: '退款',
+    admin_adjust: '管理员调整',
+    redeem_code: '兑换码',
+};
+
+export default () => {
+    const { clearFlashes, clearAndAddHttpError } = useFlash();
+
+    const { data, error } = useSWR<PointsData>('/api/client/points', () => getPoints());
+
+    React.useEffect(() => {
+        if (error) clearAndAddHttpError({ key: 'points', error });
+        if (!error) clearFlashes('points');
+    }, [error]);
+
+    return (
+        <PageContentBlock title={'我的积分'} showFlashKey={'points'}>
+            {!data ? (
+                <Spinner centered size={'large'} />
+            ) : (
+                <div css={tw`mt-4 space-y-6`}>
+                    {/* Balance card */}
+                    <div css={tw`bg-neutral-700 rounded-lg p-6 flex items-center justify-between shadow-lg`}>
+                        <div>
+                            <p css={tw`text-neutral-400 text-sm`}>当前积分余额</p>
+                            <p css={tw`text-5xl font-bold text-cyan-400 mt-1`}>{data.balance}</p>
+                        </div>
+                        <div css={tw`text-6xl opacity-10`}>⭐</div>
+                    </div>
+
+                    {/* Transaction history */}
+                    <ContentBox title={'积分明细'}>
+                        {data.transactions.length === 0 ? (
+                            <p css={tw`text-center text-sm text-neutral-400 py-4`}>暂无积分记录。</p>
+                        ) : (
+                            <div css={tw`divide-y divide-neutral-600`}>
+                                {data.transactions.map((t) => (
+                                    <div key={t.id} css={tw`flex items-center justify-between py-3`}>
+                                        <div>
+                                            <p css={tw`text-neutral-200 text-sm`}>
+                                                {typeLabel[t.type] || t.type}
+                                            </p>
+                                            {t.description && (
+                                                <p css={tw`text-neutral-500 text-xs mt-0.5`}>{t.description}</p>
+                                            )}
+                                            <p css={tw`text-neutral-600 text-xs mt-0.5`}>
+                                                {new Date(t.created_at).toLocaleString('zh-CN')}
+                                            </p>
+                                        </div>
+                                        <span
+                                            css={[
+                                                tw`font-bold text-lg`,
+                                                t.amount >= 0 ? tw`text-green-400` : tw`text-red-400`,
+                                            ]}
+                                        >
+                                            {t.amount >= 0 ? '+' : ''}
+                                            {t.amount}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </ContentBox>
+                </div>
+            )}
+        </PageContentBlock>
+    );
+};

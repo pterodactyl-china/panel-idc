@@ -8,6 +8,7 @@ use Pterodactyl\Http\Middleware\Activity\AccountSubject;
 use Pterodactyl\Http\Middleware\RequireTwoFactorAuthentication;
 use Pterodactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
 use Pterodactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
+use Pterodactyl\Http\Middleware\Api\Client\RequireClientApiKey;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,48 @@ use Pterodactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
 */
 Route::get('/', [Client\ClientController::class, 'index'])->name('api:client.index');
 Route::get('/permissions', [Client\ClientController::class, 'permissions']);
+
+/*
+|--------------------------------------------------------------------------
+| Points API
+|--------------------------------------------------------------------------
+*/
+Route::prefix('/points')->group(function () {
+    Route::get('/', [Client\PointsController::class, 'index'])->name('api:client.points');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Redemption Codes API
+|--------------------------------------------------------------------------
+*/
+Route::prefix('/redeem')->group(function () {
+    Route::post('/', [Client\RedemptionCodeController::class, 'redeem'])->name('api:client.redeem');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Store API
+|--------------------------------------------------------------------------
+*/
+Route::prefix('/store')->group(function () {
+    Route::get('/', [Client\StoreController::class, 'index'])->name('api:client.store');
+    Route::post('/order', [Client\PaymentController::class, 'createOrder'])->name('api:client.store.order');
+    Route::get('/order/{orderNo}', [Client\PaymentController::class, 'queryOrder'])->name('api:client.store.order.query');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Payment Notify (webhook, no auth required)
+|--------------------------------------------------------------------------
+| Payment gateway (Alipay / WeChat) servers POST here. Auth middleware is
+| intentionally stripped — signature verification is performed inside the
+| controller before any order is fulfilled.
+|--------------------------------------------------------------------------
+*/
+Route::post('/payment/notify/{method}', [Client\PaymentController::class, 'notify'])
+    ->withoutMiddleware(['auth:sanctum', RequireClientApiKey::class, RequireTwoFactorAuthentication::class])
+    ->name('api:client.payment.notify');
 
 Route::prefix('/account')->middleware(AccountSubject::class)->group(function () {
     Route::prefix('/')->withoutMiddleware(RequireTwoFactorAuthentication::class)->group(function () {
